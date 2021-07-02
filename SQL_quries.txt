@@ -1,0 +1,573 @@
+CREATE TABLE student(
+    student_id INT AUTO_INCREMENT,
+    name VARCHAR(20) NOT NULL,
+    major VARCHAR(20) DEFAULT 'UNDECIDED',
+    PRIMARY KEY(student_id)
+
+);
+
+DESCRIBE student;
+
+SELECT * FROM student;
+
+
+
+
+DROP TABLE student;
+
+ALTER TABLE student ADD gpa DECIMAL(3,2);
+
+ALTER TABLE student DROP COLUMN major;
+
+INSERT INTO student (name) VALUES('joy');
+
+INSERT INTO student (name,major) VALUES('phlips','biology');
+
+INSERT INTO student (name,major) VALUES('benard','computer science');
+
+
+INSERT INTO student (name,major) VALUES('bob','physics');
+
+INSERT INTO student (name,major) VALUES('benard','science');
+
+INSERT INTO student  VALUES(6,NULL,'computer science');
+
+SELECT * FROM student;
+
+
+##################################################################################################
+
+CREATE TABLE Employee(
+    emp_id INT PRIMARY KEY,
+    first_name VARCHAR(20),
+    last_name VARCHAR(20),
+    birth_date DATE,
+    sex VARCHAR(1),
+    Salary INT,
+    Super_id INT,
+    branch_id INT
+);
+
+
+CREATE TABLE Branch(
+    branch_id INT PRIMARY KEY,
+    branch_name VARCHAR(20),
+    mgr_id INT,
+    mgr_start_date DATE,
+    FOREIGN KEY(mgr_id) REFERENCES Employee(emp_id) ON DELETE SET NULL
+
+);
+
+ALTER TABLE Employee
+    ADD FOREIGN KEY(branch_id)
+    REFERENCES Branch(branch_id) 
+    ON DELETE SET NULL;
+
+ALTER TABLE Employee
+ADD FOREIGN KEY(Super_id)
+REFERENCES Employee(emp_id)
+ON DELETE SET NULL;
+
+
+CREATE TABLE Client(
+    client_id INT PRIMARY KEY,
+    client_name VARCHAR(20),
+    branch_id INT,
+    FOREIGN KEY(branch_id) REFERENCES Branch(branch_id) ON DELETE SET NULL
+);
+
+CREATE TABLE Works_With(
+    emp_id INT,
+    client_id INT,
+    Total_sales INT,
+    PRIMARY KEY(emp_id,client_id),
+    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id) ON DELETE CASCADE,
+    FOREIGN KEY(client_id) REFERENCES Client (client_id) ON DELETE CASCADE
+);
+
+CREATE TABLE Branch_Supplier(
+    branch_id INT,
+    supplier_name VARCHAR(30),
+    supply_type VARCHAR(30),
+    PRIMARY KEY(branch_id,supplier_name),
+    FOREIGN KEY(branch_id) REFERENCES Branch(branch_id) ON DELETE CASCADE
+
+);
+-- ENTRIES FOR CORPORATE BRANCH--
+INSERT INTO Employee VALUES(100,'David','Wallace','1967-11-17','M',25000,NULL,NULL);
+INSERT INTO Branch VALUES(1,'Corporate',100,'2006-02-09');
+
+UPDATE Employee
+SET branch_id=1
+WHERE emp_id=100;
+
+INSERT INTO Employee VALUES(101,'Jan','Levinson','1961-05-11','F',110000,100,1);
+
+--ENTRIES FOR SCRANTON--
+INSERT INTO Employee VALUES(102,'Michael','Scott','1964-03-15','M',75000,100,NULL)
+INSERT INTO Branch VALUES(2,'Scranton',102,'1992-02-06')
+
+UPDATE Employee
+SET branch_id=2
+WHERE emp_id=102;
+
+INSERT INTO Employee VALUES(103,'Angela','Martin','1971-06-25','F',63000,102,2)
+INSERT INTO Employee VALUES(104,'Kelly','Kapoor','1980-02-05','F',55000,102,2)
+INSERT INTO Employee VALUES(105,'Stanley','Hudson','1958-02-19','M',69000,102,2)
+
+
+INSERT INTO Employee VALUES(106,'Josh','porter','1969-09-05','M',78000,100,NULL)
+INSERT INTO Branch VALUES(3,'Stamford',106,'1998-02-13')
+
+UPDATE Employee
+SET branch_id=3
+WHERE emp_id=106
+
+INSERT INTO Employee VALUES(107,'Andy','Bernard','1973-07-22','M',65000,106,3)
+INSERT INTO Employee VALUES(108,'jim','Halpert','1978-10-01','M',71000,106,3)
+
+INSERT INTO branch_supplier VALUES(2, 'Hammer Mill', 'Paper');
+INSERT INTO branch_supplier VALUES(2, 'Uni-ball', 'Writing Utensils');
+INSERT INTO branch_supplier VALUES(3, 'Patriot Paper', 'Paper');
+INSERT INTO branch_supplier VALUES(2, 'J.T. Forms & Labels', 'Custom Forms');
+INSERT INTO branch_supplier VALUES(3, 'Uni-ball', 'Writing Utensils');
+INSERT INTO branch_supplier VALUES(3, 'Hammer Mill', 'Paper');
+INSERT INTO branch_supplier VALUES(3, 'Stamford Lables', 'Custom Forms');
+
+SELECT * FROM Branch_Supplier
+
+-- CLIENT
+INSERT INTO client VALUES(400, 'Dunmore Highschool', 2);
+INSERT INTO client VALUES(401, 'Lackawana Country', 2);
+INSERT INTO client VALUES(402, 'FedEx', 3);
+INSERT INTO client VALUES(403, 'John Daly Law, LLC', 3);
+INSERT INTO client VALUES(404, 'Scranton Whitepages', 2);
+INSERT INTO client VALUES(405, 'Times Newspaper', 3);
+INSERT INTO client VALUES(406, 'FedEx', 2);
+
+SELECT * FROM client
+
+INSERT INTO Works_With VALUES(105, 400, 55000);
+INSERT INTO works_with VALUES(102, 401, 267000);
+INSERT INTO works_with VALUES(108, 402, 22500);
+INSERT INTO works_with VALUES(107, 403, 5000);
+INSERT INTO works_with VALUES(108, 403, 12000);
+INSERT INTO works_with VALUES(105, 404, 33000);
+INSERT INTO works_with VALUES(107, 405, 26000);
+
+
+
+UPDATE student 
+SET major = 'bio'
+WHERE major='biology'
+
+UPDATE student 
+SET major = 'aero'
+WHERE student_id=5
+
+UPDATE student 
+SET major = 'chemistry'
+WHERE student_id>2 AND student_id<4
+
+DELETE from student
+where student_id=5
+
+SELECT student.name, student.major 
+FROM student ORDER BY name DESC;
+
+SELECT * 
+FROM student ORDER BY name, student_id DESC;
+
+SELECT * 
+FROM student ORDER BY name, student_id DESC
+LIMIT 3; -- IT will give only 3 item.
+
+SELECT * 
+FROM student
+WHERE name IN ('bob','joy')
+LIMIT 1;
+
+
+
+--------------------------------------------------------------------------------
+
+
+CREATE TABLE Employee(
+    emp_id INT PRIMARY KEY,
+    first_name VARCHAR(20),
+    last_name VARCHAR(20),
+    birth_date DATE,
+    sex VARCHAR(1),
+    Salary INT,
+    Super_id INT,
+    branch_id INT
+);
+
+
+CREATE TABLE Branch(
+    branch_id INT PRIMARY KEY,
+    branch_name VARCHAR(20),
+    mgr_id INT,
+    mgr_start_date DATE,
+    FOREIGN KEY(mgr_id) REFERENCES Employee(emp_id) ON DELETE SET NULL
+
+);
+
+ALTER TABLE Employee
+    ADD FOREIGN KEY(branch_id)
+    REFERENCES Branch(branch_id) 
+    ON DELETE SET NULL;
+
+ALTER TABLE Employee
+ADD FOREIGN KEY(Super_id)
+REFERENCES Employee(emp_id)
+ON DELETE SET NULL;
+
+
+CREATE TABLE Client(
+    client_id INT PRIMARY KEY,
+    client_name VARCHAR(20),
+    branch_id INT,
+    FOREIGN KEY(branch_id) REFERENCES Branch(branch_id) ON DELETE SET NULL
+);
+
+CREATE TABLE Works_With(
+    emp_id INT,
+    client_id INT,
+    Total_sales INT,
+    PRIMARY KEY(emp_id,client_id),
+    FOREIGN KEY(emp_id) REFERENCES Employee(emp_id) ON DELETE CASCADE,
+    FOREIGN KEY(client_id) REFERENCES Client (client_id) ON DELETE CASCADE
+);
+
+CREATE TABLE Branch_Supplier(
+    branch_id INT,
+    supplier_name VARCHAR(30),
+    supply_type VARCHAR(30),
+    PRIMARY KEY(branch_id,supplier_name),
+    FOREIGN KEY(branch_id) REFERENCES Branch(branch_id) ON DELETE CASCADE
+
+);
+-- ENTRIES FOR CORPORATE BRANCH--
+INSERT INTO Employee VALUES(100,'David','Wallace','1967-11-17','M',25000,NULL,NULL);
+INSERT INTO Branch VALUES(1,'Corporate',100,'2006-02-09');
+
+UPDATE Employee
+SET branch_id=1
+WHERE emp_id=100;
+
+INSERT INTO Employee VALUES(101,'Jan','Levinson','1961-05-11','F',110000,100,1);
+
+--ENTRIES FOR SCRANTON--
+INSERT INTO Employee VALUES(102,'Michael','Scott','1964-03-15','M',75000,100,NULL)
+INSERT INTO Branch VALUES(2,'Scranton',102,'1992-02-06')
+
+UPDATE Employee
+SET branch_id=2
+WHERE emp_id=102;
+
+INSERT INTO Employee VALUES(103,'Angela','Martin','1971-06-25','F',63000,102,2)
+INSERT INTO Employee VALUES(104,'Kelly','Kapoor','1980-02-05','F',55000,102,2)
+INSERT INTO Employee VALUES(105,'Stanley','Hudson','1958-02-19','M',69000,102,2)
+
+
+INSERT INTO Employee VALUES(106,'Josh','porter','1969-09-05','M',78000,100,NULL)
+INSERT INTO Branch VALUES(3,'Stamford',106,'1998-02-13')
+
+UPDATE Employee
+SET branch_id=3
+WHERE emp_id=106
+
+INSERT INTO Employee VALUES(107,'Andy','Bernard','1973-07-22','M',65000,106,3)
+INSERT INTO Employee VALUES(108,'jim','Halpert','1978-10-01','M',71000,106,3)
+
+INSERT INTO branch_supplier VALUES(2, 'Hammer Mill', 'Paper');
+INSERT INTO branch_supplier VALUES(2, 'Uni-ball', 'Writing Utensils');
+INSERT INTO branch_supplier VALUES(3, 'Patriot Paper', 'Paper');
+INSERT INTO branch_supplier VALUES(2, 'J.T. Forms & Labels', 'Custom Forms');
+INSERT INTO branch_supplier VALUES(3, 'Uni-ball', 'Writing Utensils');
+INSERT INTO branch_supplier VALUES(3, 'Hammer Mill', 'Paper');
+INSERT INTO branch_supplier VALUES(3, 'Stamford Lables', 'Custom Forms');
+
+update branch_supplier
+set supplier_name='Stamford labels'
+where branch_id=3 AND supply_type='Custom Forms';
+
+SELECT * FROM Branch_Supplier
+
+-- CLIENT
+INSERT INTO client VALUES(400, 'Dunmore Highschool', 2);
+INSERT INTO client VALUES(401, 'Lackawana Country', 2);
+INSERT INTO client VALUES(402, 'FedEx', 3);
+INSERT INTO client VALUES(403, 'John Daly Law, LLC', 3);
+INSERT INTO client VALUES(404, 'Scranton Whitepages', 2);
+INSERT INTO client VALUES(405, 'Times Newspaper', 3);
+INSERT INTO client VALUES(406, 'FedEx', 2);
+
+SELECT * FROM client
+
+INSERT INTO Works_With VALUES(105, 400, 55000);
+INSERT INTO works_with VALUES(102, 401, 267000);
+INSERT INTO works_with VALUES(108, 402, 22500);
+INSERT INTO works_with VALUES(107, 403, 5000);
+INSERT INTO works_with VALUES(108, 403, 12000);
+INSERT INTO works_with VALUES(105, 404, 33000);
+INSERT INTO works_with VALUES(107, 405, 26000);
+
+
+select *
+from Employee
+where Salary >1000;
+
+
+select *
+from Employee
+where Salary = (select MAX(Salary) from Employee)
+
+
+select *
+from Employee
+order by Salary desc
+limit 3
+
+select * from 
+where branch_id =2
+from Employee
+
+
+select first_name , last_name
+from Employee order by Salary desc,first_name 
+limit 5
+
+
+select first_name as forename, last_name as title
+from Employee order by Salary desc,first_name 
+limit 5
+
+select COUNT(emp_id)
+from employee;
+
+-- Find the number of employees--
+select COUNT(emp_id)
+from employee;
+
+-- Find the average of all employee's salaries
+select AVG(salary)
+from employee;
+
+-- Find the sum of all employee's salaries
+select SUM(salary)
+from employee;
+
+-- Find out how many males and females there are
+select COUNT(sex) ,sex
+from employee
+group by sex;
+
+-- Find the total sales of each salesman
+
+select SUM(Total_sales),emp_id
+from works_with
+group by emp_id;
+
+-- Find the total amount of money spent by each client
+
+select SUM(Total_sales),client_id
+from works_with
+group by client_id;
+
+
+-- % = any # characters, _ = one character
+
+-- Find any client's who are an LLC
+
+select * 
+from client
+where client_name LIKE '%LLC';
+
+
+select * 
+from client
+where client_name LIKE '%a';
+
+
+-- Find any branch suppliers who are in the label business
+
+select * 
+from branch_supplier
+where supplier_name LIKE '%label%';
+
+select * 
+from branch_supplier;
+
+-- Find any employee born on the 15th day of the month
+
+select *
+from Employee;
+
+select * 
+from Employee
+where birth_date LIKE '____-__-15';
+
+-- Find any clients who are schools
+
+select * 
+from client;
+
+select * 
+from client
+where client_name LIKE '%school%';
+
+-- UNION
+
+select first_name AS sir_name
+from employee
+UNION
+select supplier_name
+from branch_supplier;
+
+select * 
+from client
+
+select *
+from branch_supplier;
+
+select client_name,client.branch_id
+from client
+UNION
+select supplier_name,branch_supplier.branch_id
+from branch_supplier;
+
+--JOIN
+
+-- find all branches and the name of there managers
+
+select *
+from Employee
+UNION
+select *
+from Branch;
+
+INSERT into branch VALUES( 4,'space',NULL,NULL);
+
+select employee.emp_id,employee.first_name,branch.branch_name
+from employee
+JOIN branch
+ON employee.emp_id=branch.mgr_id;
+
+-- Find any clients who are schools
+
+
+select employee.emp_id,employee.first_name,branch.branch_name
+from employee
+RIGHT JOIN branch
+ON employee.emp_id=branch.mgr_id;
+
+-- Find names of all employees who have sold over 30,000 to single client
+
+select works_with.emp_id,works_with.Total_sales,employee.first_name,employee.last_name
+from works_with
+JOIN employee
+ON works_with.emp_id=employee.emp_id
+where works_with.Total_sales > 30000;
+
+--or
+select employee.first_name,employee.last_name
+from employee
+where employee.emp_id IN (
+    select works_with.emp_id
+    from works_with
+    where works_with.Total_sales >30000
+)
+
+
+-- Find all clients who are handles by the branch that Michael Scott manages
+-- Assume you know Michael's ID
+
+select *
+from branch;
+
+select client.client_name
+from client
+where client.branch_id=(
+    select branch.branch_id
+    from branch
+    where branch.mgr_id=102
+);
+
+-- Find all clients who are handles by the branch that Michael Scott manages
+-- Assume you dont know Michael's ID
+
+
+select client.client_name
+from client
+where client.branch_id=(
+    select branch.branch_id
+    from branch
+    where branch.mgr_id=(
+        select employee.emp_id
+        from employee
+        where employee.first_name LIKE 'Michael' AND employee.last_name LIKE 'Scott'
+        limit 1
+    )
+);
+
+
+-- Find the names of employees who work with clients handled by the scranton branch
+
+
+-- Find the names of all clients who have spent more than 100,000 dollars
+select * 
+from works_with
+
+select client.client_name
+    from client
+    where client.client_id=(
+
+        select works_with.client_id
+        from works_with
+        where works_with.Total_sales >10000
+        limit 1
+    );
+
+
+
+SELECT client.client_name
+FROM client
+WHERE client.client_id IN (
+                          SELECT client_id
+                          FROM (
+                                SELECT SUM(works_with.total_sales) AS totals, client_id
+                                FROM works_with
+                                GROUP BY client_id) AS total_client_sales
+                          WHERE totals > 100000
+);
+
+-- on delete 
+
+delete 
+from employee
+where emp_id=102;
+
+select * from branch;
+
+delete from branch_supplier
+where branch_id=3;
+
+
+--trigger
+DELIMITER $$ 
+CREATE 
+    TRIGGER my_trigger BEFORE INSERT
+    ON employee
+    FOR EACH ROW BEGIN
+        INSERT INTO trigger_test VALUES('NEW ENTRY HAS DONE');
+    END$$
+DELIMITER ;
+
+
+SELECT * FROM employee;
+INSERT INTO employee VALUES(109, 'Oscar', 'Martinez', '1968-02-19', 'M', 69000, 106, 3);
+
+
+
